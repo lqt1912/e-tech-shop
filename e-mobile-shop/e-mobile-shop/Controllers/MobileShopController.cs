@@ -16,5 +16,11 @@ namespace e_mobile_shop.Controllers
         {
             return View();
         }
+
+        public IActionResult TrangChu2(){
+            return View();
+        }
+        
+        
     }
 }

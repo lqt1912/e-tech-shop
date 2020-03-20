@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\thang\\source\\repos\\e-mobile-shop\\e-mobile-shop\\e-mobile-shop.csproj": {}
+    "/home/lqt1912/git-repo/e-tech-shop/e-mobile-shop/e-mobile-shop/e-mobile-shop.csproj": {}
   },
   "projects": {
-    "C:\\Users\\thang\\source\\repos\\e-mobile-shop\\e-mobile-shop\\e-mobile-shop.csproj": {
+    "/home/lqt1912/git-repo/e-tech-shop/e-mobile-shop/e-mobile-shop/e-mobile-shop.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\thang\\source\\repos\\e-mobile-shop\\e-mobile-shop\\e-mobile-shop.csproj",
+        "projectUniqueName": "/home/lqt1912/git-repo/e-tech-shop/e-mobile-shop/e-mobile-shop/e-mobile-shop.csproj",
         "projectName": "e-mobile-shop",
-        "projectPath": "C:\\Users\\thang\\source\\repos\\e-mobile-shop\\e-mobile-shop\\e-mobile-shop.csproj",
-        "packagesPath": "C:\\Users\\thang\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\thang\\source\\repos\\e-mobile-shop\\e-mobile-shop\\obj\\",
+        "projectPath": "/home/lqt1912/git-repo/e-tech-shop/e-mobile-shop/e-mobile-shop/e-mobile-shop.csproj",
+        "packagesPath": "/home/lqt1912/.nuget/packages/",
+        "outputPath": "/home/lqt1912/git-repo/e-tech-shop/e-mobile-shop/e-mobile-shop/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
-        ],
         "configFilePaths": [
-          "C:\\Users\\thang\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/home/lqt1912/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -85,7 +79,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.200/RuntimeIdentifierGraph.json"
         }
       }
     }
