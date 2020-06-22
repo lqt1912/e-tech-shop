@@ -1,119 +1,72 @@
-﻿a{
-   text-decoration:none;
-}
-.bg-black {
-    background-color: black;
-}
-.bg-white{
-    background-color:white;
-}
-.bg-fed700 {
-    background-color: #fed700;
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
 }
 
-.nav-item {
-    background: #fed700;
-    width: 90px;
-    height: 50px;
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
 }
 
-.nav-link {
-    color: black !important;
-    text-align: center;
-    font-size: 11px !important;
-    text-transform: uppercase;
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
 }
 
-
-
-.nav-item:hover {
-    background-color: #808080 !important;
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
 }
 
-.tincongnghe {
-  
-    padding: 10px 20px 10px 10px;
-    background: #fdd504;
-    line-height: 1.3em;
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    text-transform: uppercase;
-    text-align: center;
-    position: relative;
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
 }
 
-    .tincongnghe a {
-        color: black;
-    }
-
-        .tincongnghe a:hover {
-            text-decoration: none;
-        }
-
-    .tincongnghe::after {
-        content: '';
-        width: 0;
-        height: 0;
-        border-right: 12px solid #fff;
-        border-top: 20px solid transparent;
-        border-bottom: 20px solid transparent;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-    }
-
-.img-tincongnghe {
-    float: left;
-    width: 100px;
-    height: 57px;
-    margin: 0 10px 0 0;
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.news{
-    color:black;
-}
-.news:hover{
-    text-decoration:none;
-    color:black;
-}
-    .news span {
-        font-size:12px;
-        font-weight: lighter;
-        margin-right: 10px;
-    }
-
-.my-owl-item{
-    border-left: 1px solid gray;
-    text-align:center;
-    font-size:12px;
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
-.discount {
-    background-image: linear-gradient(-90deg,#ec1f1f 0%,#ff9c00 100%);
-    border-radius: 10px;
-    padding: 1px 7px;
-    padding-left: 0;
-    padding-right: 10px;
-    color:white;
-    font-size: 11px;
-   
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
 }
-    .discount:before {
-        content: ' ';
-        display: inline-block;
-     background-size: 50% 50%;
-     color: white;
-        background-image: url('../image/bolt-solid.svg');
-        width: 20px;
-        height: 20px;
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-color: #f13500;
-        border-radius: 50%;
-        vertical-align: middle;
-        position: relative;
-        top: -1px;
-        margin-right: 5px;
-    }
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+

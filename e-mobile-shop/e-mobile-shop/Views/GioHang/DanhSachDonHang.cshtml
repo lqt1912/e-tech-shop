@@ -1,0 +1,113 @@
+﻿@using e_mobile_shop.Models.Helpers;
+@model PaginatedList<e_mobile_shop.Models.DonHang>
+
+@{
+    ViewData["Title"] = "DanhSachDonHang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<style>
+    td, th {
+        text-align: center;
+    }
+
+    .s {
+        font-size: 20px;
+        padding: 5px;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+    }
+        /* Tooltip text */
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            /* Position the tooltip text - see examples below! */
+            position: absolute;
+            z-index: 1;
+        }
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+</style>
+
+<div>
+    <h3 class="tittle-w3l text-center mb-lg-5 mb-sm-4 mb-2 mt-2">
+        <span>D</span>anh sách đơn hàng
+    </h3>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Mã đơn hàng
+                    </th>
+
+                    <th>
+                        Giá trị đơn hàng
+                    </th>
+
+                    <th>
+                        Tình trạng đơn hàng
+                    </th>
+                    <th>
+                        Ngày đặt hàng
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MaDh)
+                        </td>
+                        <td>
+                            @(item.PhiVanChuyen + item.Tongtien)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TinhTrangDh)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NgayDatMua)
+                        </td>
+                        <td>
+                            <a ata-toggle="tooltip" data-placement="left" title="Chi tiết " asp-controller="GioHang" asp-action="ChiTietDonHang" asp-route-id="@item.MaDh">
+                                <i class="s fas fa-info-circle"></i>
+                            </a>
+                            <a data-toggle="tooltip" data-placement="top" title="Hủy "><i class=" s fas fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="d-flex">
+            <a asp-action="DanhSachDonHang"
+               asp-route-pageNumber="@(Model.PageIndex - 1)"
+               class="btn btn-outline-primary m-1 @prevDisabled" style="width:50%;border-radius:0px">
+                <i class="fas fa-backward"></i>  Trang trước
+            </a>
+            <a asp-action="DanhSachDonHang"
+               asp-route-pageNumber="@(Model.PageIndex + 1)"
+               class="btn btn-outline-primary m-1 @nextDisabled" style="width:50%; border-radius:0px;">
+                Trang sau <i class="fas fa-forward"></i>
+            </a>
+        </div>
+    </div>
+</div>
