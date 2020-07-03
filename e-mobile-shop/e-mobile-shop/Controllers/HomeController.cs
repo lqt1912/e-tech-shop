@@ -25,6 +25,7 @@ namespace e_mobile_shop.Controllers
         {
             _context = context;
             dataAccess = new DataAccess();
+           
         }
 
        
@@ -89,7 +90,7 @@ namespace e_mobile_shop.Controllers
                 sanphams = sanphams.Where(s => s.TenSp.ToLower().Contains(tenSp.ToLower()));
             }
 
-            sanphams = dataAccess.FilterSanPhamWithParam(sanphams, params_list, loaiSp);
+            sanphams = dataAccess.FilterSanPhamWithParam(sanphams, params_list, loaiSp,_context);
 
             //filter by NSX 
             if (!String.IsNullOrEmpty(hangSx))
@@ -120,14 +121,7 @@ namespace e_mobile_shop.Controllers
             {
                 ViewData["LoaiSp"] = loaiSp;
 
-                if (loaiSp != "LSP0001")
-                {
                     sanphams = sanphams.Where(x => x.LoaiSp == loaiSp);
-                }
-                else
-                {
-                    sanphams = sanphams.Where(x => x.LoaiSp != "LSP0002" && x.LoaiSp != "LSP0007" && x.LoaiSp != "LSP0008");
-                }
             }
             switch (sortOrder)
             {
@@ -188,15 +182,13 @@ namespace e_mobile_shop.Controllers
 
             if (!String.IsNullOrEmpty(params_list) && !String.IsNullOrEmpty(loaiSp))
             {
-                sanphams = dataAccess.FilterSanPhamWithParam(sanphams, params_list, loaiSp);
+                sanphams = dataAccess.FilterSanPhamWithParam(sanphams, params_list, loaiSp,_context);
 
             }
             //Do something with paramslist
             return Json(sanphams.ToList().Count);
 
         }
-
-
 
         [HttpPost]
         public JsonResult CheckVoucher(string voucher)
@@ -234,7 +226,6 @@ namespace e_mobile_shop.Controllers
         {
             return View(_context.Province.ToList());
         }
-
 
 
         [HttpGet]

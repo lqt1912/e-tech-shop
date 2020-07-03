@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BotDetect.Web;
 using e_mobile_shop.Data;
 using e_mobile_shop.Models;
+using e_mobile_shop.Models.Repository;
 using e_mobile_shop.Models.Services;
 using e_mobile_shop.Models.Services.Hubs;
 using Microsoft.AspNetCore.Builder;
@@ -57,34 +58,37 @@ namespace e_mobile_shop
 
                 options.SignIn.RequireConfirmedEmail = true;
             });
-            //services.AddAuthentication().AddGoogle(options => {
-            //    //IConfigurationSection googleAuthNSection =
-            //    //    Configuration.GetSection("Authentication:Google");
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                //IConfigurationSection googleAuthNSection =
+                //    Configuration.GetSection("Authentication:Google");
 
-            //    //options.ClientId = googleAuthNSection["ClientId"];
-            //    //options.ClientSecret = googleAuthNSection["ClientSecret"];
-            //    options.ClientId = DataAccess.context.Parameters.Find("4").Value;
-            //    options.ClientSecret = DataAccess.context.Parameters.Find("3").Value;
-            //});
-            //services.AddAuthentication().AddFacebook(facebookOptions =>
-            //{
-            //    //facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
-            //    //facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            //    facebookOptions.AppId = DataAccess.context.Parameters.Find("6").Value;
-            //    facebookOptions.AppSecret = DataAccess.context.Parameters.Find("5").Value;
-            //});
+                //options.ClientId = googleAuthNSection["ClientId"];
+                //options.ClientSecret = googleAuthNSection["ClientSecret"];
+                options.ClientId = new ClientDbContext().Parameters.Find("4").Value;
+                options.ClientSecret = new ClientDbContext().Parameters.Find("3").Value;
+            });
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                //facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                //facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                facebookOptions.AppId = new ClientDbContext().Parameters.Find("6").Value;
+                facebookOptions.AppSecret = new ClientDbContext().Parameters.Find("5").Value;
+            });
 
-            //services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
-            //services.Configure<AuthMessageSenderOptions>(option => { 
-            //    option.SendGridUser = DataAccess.context.Parameters.Find("1").Value;
-            //    option.SendGridKey = DataAccess.context.Parameters.Find("2").Value;
-            //});
+            services.Configure<AuthMessageSenderOptions>(option =>
+            {
+                option.SendGridUser = new ClientDbContext().Parameters.Find("1").Value;
+                option.SendGridKey = new ClientDbContext().Parameters.Find("2").Value;
+            });
 
-           
+
+            services.AddSignalR();
+            services.AddTransient<IDonHangRepository, DonHangRepository>();
 
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -111,7 +115,8 @@ namespace e_mobile_shop
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                endpoints.MapHub<Chat>("/chat");
+                endpoints.MapHub<SignalServer>("/signalServer");
+
             });
         }
     }

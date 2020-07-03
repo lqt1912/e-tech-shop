@@ -935,9 +935,6 @@ C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\De
 C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Components\BinhLuan\Default.cshtml.g.cs
 C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Components\TraLoiBinhLuan\Default.cshtml.g.cs
 C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\System.Net.WebSockets.WebSocketProtocol.dll
-C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.csproj.CoreCompileInputs.cache
-C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\Razor\Views\Home\Contact.cshtml.g.cs
 C:\Users\thang\Documents\GitHub\e-mobile-shop-refactored\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\thang\Documents\GitHub\e-mobile-shop-refactored\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\appsettings.json
@@ -1438,3 +1435,18 @@ C:\Users\thang\Documents\GitHub\e-mobile-shop-refactored\e-mobile-shop\e-mobile-
 C:\Users\thang\Documents\GitHub\e-mobile-shop-refactored\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.dll
 C:\Users\thang\Documents\GitHub\e-mobile-shop-refactored\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.pdb
 C:\Users\thang\Documents\GitHub\e-mobile-shop-refactored\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.genruntimeconfig.cache
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\libman.json
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.json
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.thegioicongnghe - Web Deploy.json
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Http.Connections.Client.dll
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Microsoft.Azure.SignalR.Common.dll
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Microsoft.Azure.SignalR.dll
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Microsoft.Azure.SignalR.Protocols.dll
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.csproj.CoreCompileInputs.cache
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\e-mobile-shop.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\thang\Documents\GitHub\e-mobile-shop\e-mobile-shop\e-mobile-shop\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Components\GioHang\Default.cshtml.g.cs

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using e_mobile_shop.Models;
 using e_mobile_shop.Models.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace e_mobile_shop.Controllers
         {
             context = _context;
             dataAccess = new DataAccess();
+            
         }
         public IActionResult Index()
         {
@@ -27,7 +29,7 @@ namespace e_mobile_shop.Controllers
         [Route("chi-tiet/{id}")]
         public IActionResult SanPham(string Id)
         {
-            return View(dataAccess.GetSanPham(Id));
+            return View(context.SanPham.Find(Id));
         }
 
         [Route("danh-sach/{id}")]
@@ -35,7 +37,7 @@ namespace e_mobile_shop.Controllers
         {
             var sanphams = from s in context.SanPham select s ;
 
-            if (Id != "LSP0001")
+            if (Id != "LSP0006")
             {
                 sanphams= context.SanPham.Where(x => x.LoaiSp == Id);
             }

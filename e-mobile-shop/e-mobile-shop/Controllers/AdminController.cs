@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using e_mobile_shop.Models.Helpers;
-
+using e_mobile_shop.Models.Repository;
 
 namespace e_mobile_shop.Controllers
 {
@@ -16,13 +16,24 @@ namespace e_mobile_shop.Controllers
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly ClientDbContext context;
         private readonly DataAccess dataAccess;
-        public AdminController(IWebHostEnvironment hostEnvironment, ClientDbContext _context)
+        private readonly IDonHangRepository _repository;
+
+
+
+      
+        public AdminController(IWebHostEnvironment hostEnvironment, ClientDbContext _context, IDonHangRepository repository)
         {
             webHostEnvironment = hostEnvironment;
             context = _context;
-            dataAccess =new  DataAccess();
+            dataAccess = new DataAccess();
+            _repository = repository;
         }
-
+        [HttpGet]
+        public IActionResult Test()
+        {
+                return Ok(_repository.GetAll());
+         
+        }
         // [Authorize(Roles = "Quản trị viên")]
         public IActionResult Index()
         {
@@ -48,9 +59,16 @@ namespace e_mobile_shop.Controllers
             }
             return View(list);
         }
-        public IActionResult QuanLyDonHang(string searchValue)
+       
+        public IActionResult QuanLyDonHang(string searchValue, string status)
         {
             List<DonHang> list = context.DonHang.ToList();
+            if(!String.IsNullOrEmpty(status))
+            {
+                list = list.Where(x => x.TinhTrangDh.Value.ToString() == status).ToList();
+            }
+
+
             List<DonHang> rs = new List<DonHang>();
             foreach(var i in list)
             {
@@ -70,7 +88,14 @@ namespace e_mobile_shop.Controllers
                 }
                 return View(rs).WithSuccess("Tìm kiếm", searchValue);
             }
-            return View(list);
+            if(!string.IsNullOrEmpty(status))
+            {
+                return View(list).WithSuccess("Trạng thái đơn hàng: ", context.TrangThaiDonHang.Find(Int32.Parse(status)).TenTrangThai);
+            }
+            else
+            {
+                return View(list);
+            }
         }
         public IActionResult ChiTietDonHang(string id)
         {
@@ -160,7 +185,6 @@ namespace e_mobile_shop.Controllers
             {
                 model.AnhDaiDien = UploadedFile(AnhDaiDien, "ProductAvatar");
             }
-            
             if (ModelState.IsValid)
             {
                 model.Status = string.IsNullOrEmpty(fc["status"]) ? 0 : 1;
