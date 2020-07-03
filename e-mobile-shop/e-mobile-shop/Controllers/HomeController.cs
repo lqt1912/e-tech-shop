@@ -18,18 +18,22 @@ namespace e_mobile_shop.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ClientDbContext _context;
+        private readonly DataAccess dataAccess ;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ClientDbContext context)
         {
-            _logger = logger;
+            _context = context;
+            dataAccess = new DataAccess();
         }
 
+       
 
         // [Route("trang-chu")]
         public IActionResult Index()
         {
 
-            return View(DataAccess.ViewSanPham());
+            return View(_context.AspNetUsers.ToList());
         }
 
 
@@ -76,7 +80,7 @@ namespace e_mobile_shop.Controllers
                 giaTien = currentFilter;
             }
             ViewData["CurrentFilter"] = giaTien;
-            var sanphams = from s in DataAccess.context.SanPham select s;
+            var sanphams = from s in _context.SanPham select s;
 
             //filter by name 
             if (!String.IsNullOrEmpty(tenSp))
@@ -85,7 +89,7 @@ namespace e_mobile_shop.Controllers
                 sanphams = sanphams.Where(s => s.TenSp.ToLower().Contains(tenSp.ToLower()));
             }
 
-            sanphams = DataAccess.FilterSanPhamWithParam(sanphams, params_list, loaiSp);
+            sanphams = dataAccess.FilterSanPhamWithParam(sanphams, params_list, loaiSp);
 
             //filter by NSX 
             if (!String.IsNullOrEmpty(hangSx))
@@ -180,11 +184,11 @@ namespace e_mobile_shop.Controllers
             var axb = paramslist.Split("%");
             var params_list = axb[0];
             var loaiSp = axb[1];
-            var sanphams = from s in DataAccess.context.SanPham select s;
+            var sanphams = from s in _context.SanPham select s;
 
             if (!String.IsNullOrEmpty(params_list) && !String.IsNullOrEmpty(loaiSp))
             {
-                sanphams = DataAccess.FilterSanPhamWithParam(sanphams, params_list, loaiSp);
+                sanphams = dataAccess.FilterSanPhamWithParam(sanphams, params_list, loaiSp);
 
             }
             //Do something with paramslist
@@ -192,6 +196,26 @@ namespace e_mobile_shop.Controllers
 
         }
 
+
+
+        [HttpPost]
+        public JsonResult CheckVoucher(string voucher)
+        {
+            if(String.IsNullOrEmpty(voucher) || String.IsNullOrWhiteSpace(voucher))
+            {
+                return Json(true);
+            }
+            var a = _context.Voucher.Where(x => x.VoucherCode == voucher).SingleOrDefault();
+
+            if (a != null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
 
         [HttpPost]
         public IActionResult EditUserInfo(AspNetUsers user)
@@ -203,20 +227,20 @@ namespace e_mobile_shop.Controllers
         [HttpGet]
         public IActionResult EditUserInfo(string Id)
         {
-            return View(DataAccess.context.AspNetUsers.Find(Id)); ;
+            return View(_context.AspNetUsers.Find(Id)); ;
         }
 
         public IActionResult Get()
         {
-            return View(DataAccess.context.Province.ToList());
+            return View(_context.Province.ToList());
         }
 
-    
+
 
         [HttpGet]
         public IActionResult District_Bind(int provinceId)
         {
-            var listDistrict = DataAccess.context.District.Where(x => x.ProvinceId == provinceId).ToList();
+            var listDistrict = _context.District.Where(x => x.ProvinceId == provinceId).ToList();
             return Json(listDistrict);
         }
 
@@ -224,8 +248,13 @@ namespace e_mobile_shop.Controllers
         [HttpGet]
         public IActionResult Ward_Bind(int districtId)
         {
-            var listWard = DataAccess.context.Ward.Where(x => x.DistrictId == districtId).ToList();
+            var listWard = _context.Ward.Where(x => x.DistrictId == districtId).ToList();
             return Json(listWard);
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
         }
     }
 }

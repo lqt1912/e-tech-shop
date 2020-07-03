@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using e_mobile_shop.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 using e_mobile_shop.Models.Helpers;
+
 
 namespace e_mobile_shop.Controllers
 {
     public class AdminController : Controller
     {
         private readonly IWebHostEnvironment webHostEnvironment;
-        public AdminController(IWebHostEnvironment hostEnvironment)
+        private readonly ClientDbContext context;
+        private readonly DataAccess dataAccess;
+        public AdminController(IWebHostEnvironment hostEnvironment, ClientDbContext _context)
         {
             webHostEnvironment = hostEnvironment;
+            context = _context;
+            dataAccess =new  DataAccess();
         }
 
         // [Authorize(Roles = "Quản trị viên")]
@@ -26,37 +28,119 @@ namespace e_mobile_shop.Controllers
         {
             return View();
         }
-
-        public IActionResult QuanLy(string Id)
+        public IActionResult QuanLyUser(string searchValue)
         {
-            return View(DataAccess.ReadSanPham(Id));
+            List<AspNetUsers> list = context.AspNetUsers.ToList();
+            List<AspNetUsers> rs = new List<AspNetUsers>();
+            if (!String.IsNullOrEmpty(searchValue))
+            {
+
+                foreach (var item in list)
+                {
+                    if (item.UserName.ToLower().Contains(searchValue.ToLower().Trim()))
+                        rs.Add(item);
+                    else if (!string.IsNullOrEmpty(item.HoTen) && item.HoTen.ToLower().Contains(searchValue.ToLower().Trim()))
+                    {
+                        rs.Add(item);
+                    }
+                }
+                return View(rs).WithSuccess("Tìm kiếm", searchValue);
+            }
+            return View(list);
         }
+        public IActionResult QuanLyDonHang(string searchValue)
+        {
+            List<DonHang> list = context.DonHang.ToList();
+            List<DonHang> rs = new List<DonHang>();
+            foreach(var i in list)
+            {
+                i.Ghichu = i.NgayDatMua.Value.ToString("HH:mm, dd/MM/yyyy");
+            }
+            if (!String.IsNullOrEmpty(searchValue))
+            {
+
+                foreach (var item in list)
+                {
+                    if (item.MaDh.ToLower().Contains(searchValue.ToLower().Trim()))
+                        rs.Add(item);
+                    else if (!string.IsNullOrEmpty(item.HoTen) && item.HoTen.ToLower().Contains(searchValue.ToLower().Trim()))
+                    {
+                        rs.Add(item);
+                    }
+                }
+                return View(rs).WithSuccess("Tìm kiếm", searchValue);
+            }
+            return View(list);
+        }
+        public IActionResult ChiTietDonHang(string id)
+        {
+        
+            return View(context.DonHang.Where(x=>x.MaDh == id).ToList().FirstOrDefault());
+        }
+        public IActionResult ChinhSuaDonHang(string id)
+        {
+            
+            return View(context.DonHang.Where(x => x.MaDh == id).ToList().FirstOrDefault());
+        }
+
+        [HttpPost]
+        public IActionResult ChinhSuaDonHang( DonHang model, IFormCollection fc)
+        {
+            DonHang dh = dataAccess.GetDonHang(fc["MaDh"]);
+            dh.TinhTrangDh = model.TinhTrangDh;
+            context.DonHang.Update(dh);
+            context.SaveChanges();
+            return RedirectToAction("QuanLyDonHang", "Admin").WithSuccess("Thành công", "Đơn hàng đã được sửa.");
+        }
+        public IActionResult QuanLy(string id, string searchValue)
+        {
+            ViewData["LoaiSp"] = id;
+            var a = dataAccess.ReadSanPham(id);
+            List<SanPham> rs = new List<SanPham>();
+            if (!String.IsNullOrEmpty(searchValue))
+            {
+
+                foreach (var item in a)
+                {
+                    if (item.TenSp.ToLower().Contains(searchValue.ToLower().Trim()) || item.MaSp.ToLower().Contains(searchValue.ToLower().Trim()))
+                        rs.Add(item);
+                }
+                return View(rs).WithSuccess("Tìm kiếm", searchValue);
+            }
+
+
+            return View(a);
+        }
+        //public IActionResult QuanLy(string maloai, string search)
+        //{
+        //    return View(context.SanPham.Where(x => x.MaSp.ToLower().Contains(search.ToLower()) || x.TenSp.ToLower().Contains(search.ToLower())));
+        //}
         public IActionResult QuanLyDienThoai()
         {
-            return View(DataAccess.ReadSanPham("LSP0002"));
+            return View(dataAccess.ReadSanPham("LSP0002"));
         }
         public IActionResult Them(string Id)
         {
             ViewData["MaLoai"] = Id;
-            ViewData["TenLoai"] = DataAccess.context.LoaiSp.Find(Id).TenLoai;
+            ViewData["TenLoai"] = context.LoaiSp.Find(Id).TenLoai;
             return View();
         }
 
         public IActionResult XoaSanPham(string Id)
         {
-            DataAccess.context.SanPham.Find(Id).IsOnline = 0;
-            DataAccess.context.SaveChanges();
-            return RedirectToAction("QuanLy", "Admin", new { id = DataAccess.context.SanPham.Find(Id).LoaiSp }).WithSuccess("Thành công", "Bạn đã xóa sản phẩm khỏi danh sách.");
+            context.SanPham.Find(Id).Status = 0;
+            context.SaveChanges();
+            return RedirectToAction("QuanLy", "Admin", new { id = context.SanPham.Find(Id).LoaiSp }).WithSuccess("Thành công", "Bạn đã xóa sản phẩm khỏi danh sách.");
         }
 
         public IActionResult ChinhSua(string Id)
         {
-            SanPham sp = DataAccess.context.SanPham.Find(Id);
+            SanPham sp = context.SanPham.Find(Id);
             return View(sp);
         }
 
         [HttpPost]
-        public ActionResult ChinhSua(
+        public IActionResult ChinhSua(
             SanPham model, IFormFile AnhDaiDien,
             IFormCollection fc,
             IFormFile productImages1,
@@ -65,8 +149,8 @@ namespace e_mobile_shop.Controllers
         {
             string message = "";
             model.MaSp = fc["MaSp"];
-            SanPham a = DataAccess.context.SanPham.Find(fc["MaSp"]);
-            model.Status = string.IsNullOrEmpty(fc["status"]) ? 0 : 1;
+            SanPham a = context.SanPham.Find(fc["MaSp"]);
+           
 
             if (AnhDaiDien == null)
             {
@@ -76,12 +160,14 @@ namespace e_mobile_shop.Controllers
             {
                 model.AnhDaiDien = UploadedFile(AnhDaiDien, "ProductAvatar");
             }
-            if (true)
+            
+            if (ModelState.IsValid)
             {
-                DataAccess.context.Entry(a).CurrentValues.SetValues(model);
-                DataAccess.context.SaveChanges();
+                model.Status = string.IsNullOrEmpty(fc["status"]) ? 0 : 1;
+                context.Entry(a).CurrentValues.SetValues(model);
+                context.SaveChanges();
 
-                AnhSanPham pic = DataAccess.context.AnhSanPham.Where(x => x.MaSp == model.MaSp).FirstOrDefault();
+                AnhSanPham pic = context.AnhSanPham.Where(x => x.MaSp == model.MaSp).FirstOrDefault();
                 if (productImages1 != null)
                     pic.Anh1 = UploadedFile(productImages1, "ProductImages");
                 if (productImages2 != null)
@@ -89,21 +175,21 @@ namespace e_mobile_shop.Controllers
                 if (productImages3 != null)
                     pic.Anh3 = UploadedFile(productImages3, "ProductImages");
 
-                DataAccess.context.AnhSanPham.Update(pic);
-                DataAccess.context.SaveChanges();
+                context.AnhSanPham.Update(pic);
+                context.SaveChanges();
 
-                // List<ThongSoKiThuat> listTSKT = DataAccess.ReadThongSoKiThuat(model.MaSp);
+                // List<ThongSoKiThuat> listTSKT = ReadThongSoKiThuat(model.MaSp);
 
-                foreach (var tskt in DataAccess.ReadThongSoKiThuat(model.MaSp))
+                foreach (var tskt in dataAccess.ReadThongSoKiThuat(model.MaSp))
                 {
                     tskt.GiaTri = fc[tskt.ThongSo];
-                    DataAccess.context.Update(tskt);
-                    DataAccess.context.SaveChanges();
+                    context.Update(tskt);
+                    context.SaveChanges();
 
                 }
 
                 //ThongSoKiThuat temp;
-                //foreach (var ts in DataAccess.ReadThongSo(model.LoaiSp))
+                //foreach (var ts in ReadThongSo(model.LoaiSp))
                 //{
                 //    temp = new ThongSoKiThuat()
                 //    {
@@ -113,12 +199,12 @@ namespace e_mobile_shop.Controllers
 
                 //    };
 
-                //    DataAccess.context.ThongSoKiThuat.Add(temp);
-                //    DataAccess.context.SaveChanges();
+                //    context.ThongSoKiThuat.Add(temp);
+                //    context.SaveChanges();
                 //    temp = null;
 
                 //}
-                return RedirectToAction("QuanLy", "Admin", new { id = model.LoaiSp });
+                return RedirectToAction("QuanLy", "Admin", new { id = model.LoaiSp }).WithSuccess("Thành công", "Sản phẩm đã được sửa");
             }
             else
             {
@@ -128,7 +214,7 @@ namespace e_mobile_shop.Controllers
 
 
         [HttpPost]
-        public ActionResult Them(SanPham model,
+        public IActionResult Them(SanPham model,
             IFormFile AnhDaiDien,
             IFormCollection fc,
             IFormFile productImages1,
@@ -141,13 +227,13 @@ namespace e_mobile_shop.Controllers
             if (ModelState.IsValid)
             {
 
-                //  model.MaSp = (DataAccess.context.SanPham.ToList().Count() + 1).ToString();
+                //  model.MaSp = (context.SanPham.ToList().Count() + 1).ToString();
 
                 model.AnhDaiDien = UploadedFile(AnhDaiDien, "ProductAvatar");
                 model.SoLuotXemSp = 0;
 
-                DataAccess.context.SanPham.Add(model);
-                DataAccess.context.SaveChanges();
+                context.SanPham.Add(model);
+                context.SaveChanges();
 
                 AnhSanPham pic = new AnhSanPham()
                 {
@@ -158,11 +244,11 @@ namespace e_mobile_shop.Controllers
                     Anh3 = UploadedFile(productImages3, "ProductImages")
                 };
 
-                DataAccess.context.AnhSanPham.Add(pic);
-                DataAccess.context.SaveChanges();
+                context.AnhSanPham.Add(pic);
+                context.SaveChanges();
 
                 ThongSoKiThuat tskt;
-                List<ThongSo> listTS = DataAccess.ReadThongSo(model.LoaiSp).ToList();
+                List<ThongSo> listTS = dataAccess.ReadThongSo(model.LoaiSp).ToList();
                 for (int i = 0; i < listTS.Count(); i++)
                 {
 
@@ -174,8 +260,8 @@ namespace e_mobile_shop.Controllers
 
                     };
 
-                    DataAccess.context.ThongSoKiThuat.AddAsync(tskt);
-                    DataAccess.context.SaveChanges();
+                    context.ThongSoKiThuat.AddAsync(tskt);
+                    context.SaveChanges();
                     tskt = null;
 
                 }
@@ -190,21 +276,23 @@ namespace e_mobile_shop.Controllers
                 //    {
                 //        var thongSoKiThuat = new ThongSoKiThuat()
                 //        {
-                //            MaTskt = (DataAccess.context.ThongSoKiThuat.ToList().Count() + 1).ToString(),
+                //            MaTskt = (context.ThongSoKiThuat.ToList().Count() + 1).ToString(),
                 //            ThuocTinh = fc[param],
                 //            GiaTri = fc[param2],
                 //            MaSp = model.MaSp
                 //        };
-                //        DataAccess.context.ThongSoKiThuat.Add(thongSoKiThuat);
-                //        DataAccess.context.SaveChanges();
+                //        context.ThongSoKiThuat.Add(thongSoKiThuat);
+                //        context.SaveChanges();
                 //    }
                 //    else break;
 
                 //}
-                return RedirectToAction("QuanLy", "Admin", new { id = model.LoaiSp });
+                return RedirectToAction("QuanLy", "Admin", new { id = model.LoaiSp }).WithSuccess("Thành công", "Sản phẩm đã được sửa");
             }
             else
             {
+                ModelState.AddModelError("", "aaa");
+                ViewData["MaLoai"] = model.LoaiSp;
                 return View(model);
             }
         }
@@ -231,11 +319,52 @@ namespace e_mobile_shop.Controllers
         {
             return View();
         }
+        public IActionResult QuanLyKhuyenMai(string searchValue)
+        {
+            List<Voucher> list = context.Voucher.ToList();
+            List<Voucher> rs = new List<Voucher>();
+       
+            if (!String.IsNullOrEmpty(searchValue))
+            {
 
+                foreach (var item in list)
+                {
+                    if (item.VoucherId.ToLower().Contains(searchValue.ToLower().Trim()))
+                        rs.Add(item);
+                    else if (!string.IsNullOrEmpty(item.VoucherName) && item.VoucherName.ToLower().Contains(searchValue.ToLower().Trim()))
+                    {
+                        rs.Add(item);
+                    }
+                }
+                return View(rs).WithSuccess("Tìm kiếm", searchValue);
+            }
+            return View(list);
+        }
+        public IActionResult XoaKhuyenMai(string Id)
+        {
+            context.Voucher.Find(Id).Status = 0;
+            context.SaveChanges();
+            return RedirectToAction("QuanLyKhuyenMai", "Admin").WithSuccess("Thành công", "Bạn đã xóa sản phẩm khỏi danh sách.");
+        }
+        public IActionResult ThemKhuyenMai( )
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ThemKhuyenMai(Voucher model)
+        {
+            if(ModelState.IsValid)
+            {
+                context.Voucher.Add(model);
+                context.SaveChanges();
+                return RedirectToAction("QuanLyKhuyenMai", "Admin").WithSuccess("Thành công", "Đã thêm khuyến mãi mới.");
+            }
+            return View(model);
+        }
 
         public IActionResult Detail(string id)
         {
-            return View(DataAccess.context.SanPham.Find(id));
+            return View(context.SanPham.Find(id));
         }
 
     }

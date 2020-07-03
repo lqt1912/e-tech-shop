@@ -1,19 +1,23 @@
 ﻿@{
 
-   
+    var dataAccess = new DataAccess();
 
 }
+@using Microsoft.AspNetCore.Http;
+@using e_mobile_shop.Models.Helpers;
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - TheGioiCongNghe</title>
 
     <script>
-        addEventListener("load", function () {
-            setTimeout(hideURLbar, 0);
-        }, false);
+        addEventListener("load",
+            function() {
+                setTimeout(hideURLbar, 0);
+            },
+            false);
 
         function hideURLbar() {
             window.scrollTo(0, 1);
@@ -21,21 +25,21 @@
     </script>
     <!-- //Meta tag Keywords -->
     <!-- Custom-Files -->
-    <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" type="text/css" media="all"/>
     <!-- Bootstrap css -->
-    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all"/>
     <!-- Main css -->
     <link rel="stylesheet" href="~/css/fontawesome-all.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"/>
     <!-- Font-Awesome-Icons-CSS -->
-    <link href="~/css/popuo-box.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/css/popuo-box.css" rel="stylesheet" type="text/css" media="all"/>
     <!-- pop-up-box -->
-    <link href="~/css/menu.css" rel="stylesheet" type="text/css" media="all" />
-    <link rel="stylesheet" href="~/css/flexslider.css" type="text/css" media="screen" />
+    <link href="~/css/menu.css" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" href="~/css/flexslider.css" type="text/css" media="screen"/>
     <!-- menu style -->
     <!-- //Custom-Files -->
 
-    <link href="~/css/comment_area.css" rel="stylesheet" />
+    <link href="~/css/comment_area.css" rel="stylesheet"/>
 
 
     <!-- web fonts -->
@@ -113,7 +117,10 @@
                                 <a class="btn w3view-cart" asp-controller="GioHang" asp-action="XemGioHang" name="submit" value="">
 
                                     <i style="font-size: 30px" class="fas fa-cart-arrow-down"></i>
-                                    @DataAccess.soCtdh
+                                   @if(dataAccess.soCtdh !=null)
+                                   {
+                                       <span>@dataAccess.soCtdh</span>
+                                   }
                                 </a>
 
                             </div>
@@ -132,17 +139,16 @@
                     <div class="agileits-navi_search">
                         <form action="#" method="post">
                             <div id="agileinfo-nav_search" name="agileinfo_search" class="border dropdown p-1" required="">
-                                <button style="font-size:15px;" class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="drmn" value="">Danh mục Sản phẩm</button>
-                                <div class="dropdown-menu" style="width:100%; border-radius:0px; background-color:#F8F9FA" aria-labeledby="drmn">
-                                    @foreach (var item in DataAccess.ReadLoaiSp())
+                                <button style="font-size: 15px;" class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="drmn" value="">Danh mục Sản phẩm</button>
+                                <div class="dropdown-menu" style="width: 100%; border-radius: 0px; background-color: #F8F9FA" aria-labeledby="drmn">
+                                    @foreach (var item in dataAccess.ReadLoaiSp())
                                     {
-                                        <a type="button" style="text-align:left; border-radius:0px;" class="btn btn-block p-0 " asp-action="DanhSach" asp-controller="SanPham" asp-route-id="@item.MaLoai">
-                                            <p style="color:black" class="p-2">@item.TenLoai</p>
+                                        <a type="button" style="text-align: left; border-radius: 0px;" class="btn btn-block p-0 " asp-action="DanhSach" asp-controller="SanPham" asp-route-id="@item.MaLoai">
+                                            <p style="color: black" class="p-2">@item.TenLoai</p>
                                         </a>
-
                                     }
-                                    <a type="button" style="text-align:left; border-radius:0px;" class="btn btn-block p-0 " asp-action="Filter" asp-controller="Home">
-                                        <p style="color:black;" class="p-2">Tất cả sản phẩm</p>
+                                    <a type="button" style="text-align: left; border-radius: 0px;" class="btn btn-block p-0 " asp-action="Filter" asp-controller="Home">
+                                        <p style="color: black;" class="p-2">Tất cả sản phẩm</p>
                                     </a>
                                 </div>
 
@@ -156,7 +162,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto text-center mr-xl-5">
                             <li class="nav-item active mr-lg-2 mb-lg-0 mb-2">
-                                <a class="nav-link" href="@Url.Action("Index","Home")">
+                                <a class="nav-link" href="@Url.Action("Index", "Home")">
                                     Trang chủ
                                     <span class="sr-only">(current)</span>
                                 </a>
@@ -179,14 +185,13 @@
                             <li class="nav-item mr-lg-2 mb-lg-0 mb-2">
                                 <a class="nav-link" asp-controller="SanPham" asp-action="DanhSach" asp-route-id="LSP0001">Phụ kiện</a>
                             </li>
-                            <li class="nav-item mr-lg-2 mb-lg-0 mb-2">
+                            @*<li class="nav-item mr-lg-2 mb-lg-0 mb-2">
                                 <a class="nav-link " href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                     Tin tức
                                 </a>
-
-                            </li>
+                            </li>*@
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">Hỗ trợ  </a>
+                                <a class="nav-link" asp-controller="Home" asp-action="Contact">Hỗ trợ </a>
                             </li>
 
                         </ul>
@@ -343,7 +348,9 @@
                     <!-- //quick links -->
                 </div>
             </div>
+
             <!-- //footer third section -->
+        </div>
 
     </footer>
     <!-- //footer -->
@@ -397,33 +404,33 @@
     </script>
     <!-- //popup modal (for location)-->
     <!-- cart-js -->
-    <script src="~/js/minicart.js"></script>
-    <script>
-        paypals.minicarts.render(); //use only unique class names other than paypals.minicarts.Also Replace same class name in css and minicart.min.js
+    @*<script src="~/js/minicart.js"></script>
+        <script>
+            paypals.minicarts.render(); //use only unique class names other than paypals.minicarts.Also Replace same class name in css and minicart.min.js
 
-        paypals.minicarts.cart.on('checkout', function (evt) {
-            var items = this.items(),
-                len = items.length,
-                total = 0,
-                i;
+            paypals.minicarts.cart.on('checkout', function (evt) {
+                var items = this.items(),
+                    len = items.length,
+                    total = 0,
+                    i;
 
-            // Count the number of each item in the cart
-            for (i = 0; i < len; i++) {
-                total += items[i].get('quantity');
-            }
+                // Count the number of each item in the cart
+                for (i = 0; i < len; i++) {
+                    total += items[i].get('quantity');
+                }
 
-            if (total < 3) {
-                alert('The minimum order quantity is 3. Please add more to your shopping cart before checking out');
-                evt.preventDefault();
-            }
-        });
-    </script>
+                if (total < 3) {
+                    alert('The minimum order quantity is 3. Please add more to your shopping cart before checking out');
+                    evt.preventDefault();
+                }
+            });
+        </script>*@
     <!-- //cart-js -->
     <!-- scroll seller -->
-    <script src="~/js/scroll.js"></script>
+    @*<script src="~/js/scroll.js"></script>*@
     <!-- //scroll seller -->
     <!-- smoothscroll -->
-    <script src="~/js/SmoothScroll.min.js"></script>
+    @*<script src="~/js/SmoothScroll.min.js"></script>*@
     <!-- //smoothscroll -->
     <!-- start-smooth-scrolling -->
     <script src="~/js/move-top.js"></script>
@@ -435,7 +442,8 @@
 
                 $('html,body').animate({
                     scrollTop: $(this.hash).offset().top
-                }, 1000);
+                },
+                    1000);
             });
         });
     </script>
@@ -480,7 +488,7 @@
     <script src="~/js/imagezoom.js"></script>
 
     <!-- //imagezoom -->
-    @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", false)
 
 </body>
 </html>

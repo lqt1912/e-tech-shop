@@ -23,6 +23,7 @@ namespace e_mobile_shop.Models
         public int? Status { get; set; }
         public string HoTen { get; set; }
         public string Email { get; set; }
+        public double? GiamGia { get; set; }
 
         public virtual ICollection<ChiTietDonHang> ChiTietDonHang { get; set; }
     }
