@@ -1,0 +1,36 @@
+﻿
+@{
+    var context = new ClientDbContext();
+    var dataAccess = new DataAccess();
+}
+
+@model List<AspNetUsers>
+<div class="container d-flex pt-3  " >
+        <div style="width: 60%" class=" d-none d-xl-block border p-0">@await Component.InvokeAsync("Banner")</div>
+        <div style="width: 40%" class="d-none d-xl-block ">
+            <img src="~/398-110copy-398x110.png" class="w-100 pb-1 pt-0" />
+            <img src="~/combo-A3-1-398-110-398x110.png" class="w-100 pt-1 pb-0" />
+        </div>
+</div>
+<!-- top Products -->
+    <div class="container p-0">
+
+            <div class="agileinfo-ads-display col-lg-12">
+                <div class="wrapper">
+                    <!-- first section -->
+                    @await Component.InvokeAsync("SanPhamNoiBat", new { Id = "LSP0002" })
+                    <!-- //first section -->
+                    <!-- second section -->
+                    @await Component.InvokeAsync("SanPhamNoiBat", new { Id = "LSP0007" })
+                    <!-- //second section -->
+                    <!-- third section -->
+                    @await Component.InvokeAsync("SanPhamNoiBat", new { Id = "LSP0008" })
+                    <!-- //third section -->
+                    <!-- fourth section -->
+                    @await Component.InvokeAsync("SanPhamNoiBat", new { Id = "LSP0001" })
+                    <!-- //fourth section -->
+                </div>
+            </div>
+     
+
+    </div>
