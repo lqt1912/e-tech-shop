@@ -73,7 +73,7 @@
                     </div>
                         <div class="item-info-product text-center  mt-4">
                             <h5 class="pt-1 m-0" style="max-width:inherit; overflow: hidden">
-                                @item.TenSp
+                                <a  style="color:black" asp-controller="SanPham" asp-action="SanPham" asp-route-id="@item.MaSp" > @item.TenSp</a>
                             </h5>
                             <div class="info-product-price my-2">
                                 @if (item.GiaTien != item.GiaGoc)
