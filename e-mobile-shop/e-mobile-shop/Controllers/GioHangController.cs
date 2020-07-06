@@ -126,50 +126,110 @@ namespace e_mobile_shop.Controllers
         [Route("them-vao-gio")]
         public IActionResult AddToCartSession(IFormCollection fc, string maSp)
         {
-            var ctdh1 = new ChiTietDonHang
+            var _giohang = HttpContext.Session.GetObjectFromJson<List<ChiTietDonHang>>("GioHang");
+            if((_giohang!=null) && (_giohang.Count!=0) )
             {
-                MaSp = maSp,
-                MaCtdh = "001",
-                SoLuong = int.Parse(fc["SoLuong"]),
-               
-            };
+                var _soLuong = _giohang.SingleOrDefault(x => x.MaSp == maSp).SoLuong;
 
-            if (HttpContext.Session.GetObjectFromJson<List<ChiTietDonHang>>("GioHang") == null)
-            {
-                var gh = new List<ChiTietDonHang>();
-                gh.Add(ctdh1);
-
-               ViewBag.Added = 1;
-
-                HttpContext.Session.SetObjectAsJson("GioHang", gh);
-
-                HttpContext.Session.SetString("GioHangCount", gh.Count.ToString());
-            
-
-                return RedirectToAction("SanPham", "SanPham", new {Id = ctdh1.MaSp}).WithSuccess("", "Đã thêm vào giỏ");
-                
-            }
-            else
-            {
-                var gh = HttpContext.Session.GetObjectFromJson<List<ChiTietDonHang>>("GioHang");
-
-                var index = isExist(ctdh1.MaSp);
-                if (index != -1)
+                if ( (int.Parse(fc["SoLuong"]) + _soLuong) <= context.SanPham.Find(maSp).SoLuong)
                 {
-                    gh[index].SoLuong += int.Parse(fc["SoLuong"]);
-                    
-                }
-                else
-                {
-                    gh.Add(ctdh1);
+                    var ctdh1 = new ChiTietDonHang
+                    {
+                        MaSp = maSp,
+                        MaCtdh = "001",
+                        SoLuong = int.Parse(fc["SoLuong"]),
 
+                    };
+
+                    if (HttpContext.Session.GetObjectFromJson<List<ChiTietDonHang>>("GioHang") == null)
+                    {
+                        var gh = new List<ChiTietDonHang>();
+                        gh.Add(ctdh1);
+
+                        ViewBag.Added = 1;
+
+                        HttpContext.Session.SetObjectAsJson("GioHang", gh);
+
+                        HttpContext.Session.SetString("GioHangCount", gh.Count.ToString());
+
+
+                        return RedirectToAction("SanPham", "SanPham", new { Id = ctdh1.MaSp }).WithSuccess("", "Đã thêm vào giỏ");
+
+                    }
+                    else
+                    {
+                        var gh = HttpContext.Session.GetObjectFromJson<List<ChiTietDonHang>>("GioHang");
+
+                        var index = isExist(ctdh1.MaSp);
+                        if (index != -1)
+                        {
+                            gh[index].SoLuong += int.Parse(fc["SoLuong"]);
+
+                        }
+                        else
+                        {
+                            gh.Add(ctdh1);
+
+                        }
+                        ViewBag.Added = 1;
+                        HttpContext.Session.SetObjectAsJson("GioHang", gh);
+                        HttpContext.Session.SetString("GioHangCount", gh.Count.ToString());
+                        return RedirectToAction("SanPham", "SanPham", new { Id = ctdh1.MaSp }).WithSuccess("", "Đã thêm vào giỏ");
+                    }
                 }
-                ViewBag.Added = 1;
-                HttpContext.Session.SetObjectAsJson("GioHang", gh);
-                HttpContext.Session.SetString("GioHangCount", gh.Count.ToString());
-                return RedirectToAction("SanPham", "SanPham", new {Id = ctdh1.MaSp}).WithSuccess("", "Đã thêm vào giỏ");
+                else return RedirectToAction("SanPham", "SanPham", new { Id = maSp }).WithInfo("Đã hết hàng", "Sản phẩm đã hết hàng");
+
             }
-           
+            else 
+            {
+                if (int.Parse(fc["SoLuong"]) <= context.SanPham.Find(maSp).SoLuong)
+                {
+                    var ctdh1 = new ChiTietDonHang
+                    {
+                        MaSp = maSp,
+                        MaCtdh = "001",
+                        SoLuong = int.Parse(fc["SoLuong"]),
+
+                    };
+
+                    if (HttpContext.Session.GetObjectFromJson<List<ChiTietDonHang>>("GioHang") == null)
+                    {
+                        var gh = new List<ChiTietDonHang>();
+                        gh.Add(ctdh1);
+
+                        ViewBag.Added = 1;
+
+                        HttpContext.Session.SetObjectAsJson("GioHang", gh);
+
+                        HttpContext.Session.SetString("GioHangCount", gh.Count.ToString());
+
+
+                        return RedirectToAction("SanPham", "SanPham", new { Id = ctdh1.MaSp }).WithSuccess("", "Đã thêm vào giỏ");
+
+                    }
+                    else
+                    {
+                        var gh = HttpContext.Session.GetObjectFromJson<List<ChiTietDonHang>>("GioHang");
+
+                        var index = isExist(ctdh1.MaSp);
+                        if (index != -1)
+                        {
+                            gh[index].SoLuong += int.Parse(fc["SoLuong"]);
+
+                        }
+                        else
+                        {
+                            gh.Add(ctdh1);
+
+                        }
+                        ViewBag.Added = 1;
+                        HttpContext.Session.SetObjectAsJson("GioHang", gh);
+                        HttpContext.Session.SetString("GioHangCount", gh.Count.ToString());
+                        return RedirectToAction("SanPham", "SanPham", new { Id = ctdh1.MaSp }).WithSuccess("", "Đã thêm vào giỏ");
+                    }
+                }
+                else return RedirectToAction("SanPham", "SanPham", new { Id = maSp }).WithInfo("Đã hết hàng", "Sản phẩm đã hết hàng");
+            }
         }
 
 

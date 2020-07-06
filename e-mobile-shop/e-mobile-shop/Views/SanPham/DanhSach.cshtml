@@ -376,8 +376,10 @@
             <div class="agileinfo-ads-display col-lg-12">
                 <div class="wrapper">
                     <!-- first section -->
-                        <div class="row">
-                            @foreach (var item in Model)
+                    <div class="row">
+                        @foreach (var item in Model)
+                        {
+                            if (item.SoLuong > 0)
                             {
                                 <div class="col-md-3 col-6 product-men pt-5 border">
                                     <div class="men-pro-item simpleCart_shelfItem  d-flex justify-content-between flex-column " style="height: 100%">
@@ -437,7 +439,9 @@
                                 </div>
                             }
 
-                        </div>
+                        }
+
+                    </div>
                     <!-- //first section -->
                     <div class="d-flex">
                         <a asp-action="DanhSach"
