@@ -24,7 +24,7 @@ namespace e_mobile_shop.Models.Repository
         }
         public List<DonHang> GetAll()
         {
-            
+
             var DonHangs = new List<DonHang>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -40,7 +40,7 @@ namespace e_mobile_shop.Models.Repository
                 a = true;
                 flag = 0;
                 dependency.OnChange += new OnChangeEventHandler(dbChangeNotification);
-               
+
                 var reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -50,12 +50,12 @@ namespace e_mobile_shop.Models.Repository
                         MaDh = reader["MaDH"].ToString(),
 
                     };
-                      
+
                     DonHangs.Add(DonHang);
                 }
-               
+
             }
-            
+
             return DonHangs;
         }
 
@@ -64,13 +64,13 @@ namespace e_mobile_shop.Models.Repository
             if (flag == 1)
                 return;
             var DonHangs = new List<DonHang>();
-            int num1,num2;
+            int num1, num2;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
                 SqlDependency.Start(connectionString);
-                
+
                 string commandText = "select MaDH, TinhTrangDH from dbo.DonHang";
 
                 SqlCommand cmd = new SqlCommand(commandText, conn);
@@ -93,26 +93,67 @@ namespace e_mobile_shop.Models.Repository
                         num1++;
                     else if (reader["TinhTrangDH"].ToString() == "2")
                         num2++;
-                        DonHangs.Add(DonHang);
+                    DonHangs.Add(DonHang);
                 }
                 newID = DonHangs.LastOrDefault().MaDh;
 
             };
-           
+
             if (e.Type == SqlNotificationType.Change && e.Info == SqlNotificationInfo.Update)
             {
-                _context.Clients.All.SendAsync("updateDonHangs", num1.ToString(),num2.ToString());
+                _context.Clients.All.SendAsync("updateDonHangs", num1.ToString(), num2.ToString());
             }
             else
             {
                 if (e.Type == SqlNotificationType.Change && e.Info == SqlNotificationInfo.Insert && a)
                 {
-                    _context.Clients.All.SendAsync("refreshDonHangs", newID, num1.ToString(),num2.ToString());
+                    _context.Clients.All.SendAsync("refreshDonHangs", newID, num1.ToString(), num2.ToString());
                     a = false;
                 }
                 else a = true;
             }
             flag = 1;
+        }
+
+        public void NotifyDonHang()
+        {
+            var DonHangs = new List<DonHang>();
+            int num1, num2;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlDependency.Start(connectionString);
+
+                string commandText = "select MaDH, TinhTrangDH from dbo.DonHang";
+
+                SqlCommand cmd = new SqlCommand(commandText, conn);
+
+                SqlDependency dependency = new SqlDependency(cmd);
+
+
+
+                var reader = cmd.ExecuteReader();
+                num1 = num2 = 0;
+                while (reader.Read())
+                {
+                    var DonHang = new DonHang
+                    {
+                        MaDh = reader["MaDH"].ToString(),
+
+
+                    };
+                    if (reader["TinhTrangDH"].ToString() == "1")
+                        num1++;
+                    else if (reader["TinhTrangDH"].ToString() == "2")
+                        num2++;
+                    DonHangs.Add(DonHang);
+                }
+                newID = DonHangs.LastOrDefault().MaDh;
+
+            };
+
+            _context.Clients.All.SendAsync("refreshDonHangs", newID, num1.ToString(), num2.ToString());
         }
     }
 }

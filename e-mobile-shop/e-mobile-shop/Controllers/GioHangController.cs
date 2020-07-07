@@ -6,6 +6,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using e_mobile_shop.Models;
 using e_mobile_shop.Models.Helpers;
+using e_mobile_shop.Models.Repository;
 using e_mobile_shop.Models.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,12 +21,12 @@ namespace e_mobile_shop.Controllers
 
         private readonly ClientDbContext context;
         private DataAccess dataAccess;
-
-        public GioHangController(ClientDbContext _context)
+        private readonly IDonHangRepository _repository;
+        public GioHangController(ClientDbContext _context, IDonHangRepository repository)
         {
             context = _context;
             dataAccess = new DataAccess();
-
+            _repository = repository;
         }
         [Route("xem-gio-hang")]
         public IActionResult XemGioHang(IFormCollection fc)
@@ -130,6 +131,12 @@ namespace e_mobile_shop.Controllers
             if((_giohang!=null) && (_giohang.Count!=0) )
             {
                 var _soLuong = _giohang.SingleOrDefault(x => x.MaSp == maSp).SoLuong;
+                var _sp = _giohang.SingleOrDefault(x => x.MaSp == maSp);
+                var _soLuong = 0;
+                if (_sp!=null)
+                {
+                    _soLuong = (int)_sp.SoLuong;
+                }
 
                 if ( (int.Parse(fc["SoLuong"]) + _soLuong) <= context.SanPham.Find(maSp).SoLuong)
                 {
@@ -291,7 +298,7 @@ namespace e_mobile_shop.Controllers
                     dh.Dienthoai = fc["DienThoai"];
                 }
             }
-            else
+            else 
             {
                 dh.MaKh = "null" + (context.DonHang.Count() + 1);
                 dh.HoTen = fc["HoTen"];
@@ -313,7 +320,7 @@ namespace e_mobile_shop.Controllers
             context.DonHang.Add(dh);
             context.SaveChanges();
 
-
+            _repository.NotifyDonHang();
             var content = System.IO.File.ReadAllText("GioHang.html");
             content = content.Replace("{{Hoten}}", dh.HoTen);
 

@@ -47,16 +47,18 @@ namespace e_mobile_shop.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage ="Username không được để trống")]
             [Display(Name ="Username")]
             [DataType(DataType.Text)]
             public string Username { get; set; }
 
             [Display(Name ="Họ và tên")]
+            [Required(ErrorMessage = "Họ và tên không được để trống")]
             [DataType(DataType.Text)]
             public string HoTen { get; set; }
 
             [Display(Name ="Ngày sinh")]
+            [Required(ErrorMessage = "Chọn ngày sinh")]
             [DataType(DataType.DateTime)]
             public DateTime NgaySinh { get; set; }
 
@@ -68,28 +70,28 @@ namespace e_mobile_shop.Areas.Identity.Pages.Account
             public string Avatar { get; set; }
 
             [Display(Name = "Số CMND")]
-            [StringLength(12, ErrorMessage = "CMND phải có {0} tới {1} số.", MinimumLength = 9)]
+            [StringLength(14, ErrorMessage = "CMND phải có 9 tới 12 số.", MinimumLength = 11)]
             [DataType(DataType.Text)]
             public string CMND { get; set; }
 
             [Display(Name ="Số điện thoại")]
-            [StringLength(12, ErrorMessage = "Số điện thoại phải có {0} tới {1} số.", MinimumLength = 9)]
+            [StringLength(12, ErrorMessage = "Số điện thoại phải có {0} tới {1} số.", MinimumLength = 10)]
             [DataType(DataType.Text)]
             public string SDT { get; set; }
 
-            [Required]
+            [Required(ErrorMessage ="Địa chỉ không được để trống")]
             [Display(Name = "Địa chỉ")]
             [DataType(DataType.Text)]
             public string DiaChi { get; set; }
 
-            [Required]
+            [Required(ErrorMessage ="Email không được để trống")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
 
 
-            [Required]
+            [Required(ErrorMessage ="Mật khẩu không để trống")]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -100,11 +102,11 @@ namespace e_mobile_shop.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            [Required]
+            [Required(ErrorMessage ="Vui lòng chọn tỉnh/thành phố")]
             public int TinhThanh { get; set; }
-            [Required]
+            [Required(ErrorMessage ="Vui lòng chọn Quận/huyện")]
             public int QuanHuyen { get; set; }
-            [Required]
+            [Required(ErrorMessage ="Vui lòng chọn xã phường")]
             public int XaPhuong { get; set; }
             
         }

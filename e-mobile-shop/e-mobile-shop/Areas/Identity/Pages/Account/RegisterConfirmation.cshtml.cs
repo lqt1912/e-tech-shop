@@ -39,7 +39,8 @@ namespace e_mobile_shop.Areas.Identity.Pages.Account
             if (user == null)
             {
                 return NotFound($"Unable to load user with email '{email}'.");
-            }
+            } 
+            
 
             Email = email;
             // Once you add a real email sender, you should remove this code that lets you confirm the account
