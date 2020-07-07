@@ -130,7 +130,6 @@ namespace e_mobile_shop.Controllers
             var _giohang = HttpContext.Session.GetObjectFromJson<List<ChiTietDonHang>>("GioHang");
             if((_giohang!=null) && (_giohang.Count!=0) )
             {
-                var _soLuong = _giohang.SingleOrDefault(x => x.MaSp == maSp).SoLuong;
                 var _sp = _giohang.SingleOrDefault(x => x.MaSp == maSp);
                 var _soLuong = 0;
                 if (_sp!=null)
