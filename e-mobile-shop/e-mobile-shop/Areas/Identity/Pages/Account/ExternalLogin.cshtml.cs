@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using e_mobile_shop.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_mobile_shop.Areas.Identity.Pages.Account
 {
@@ -143,7 +144,7 @@ namespace e_mobile_shop.Areas.Identity.Pages.Account
 
             using (var context = new ClientDbContext())
             {
-                var usedEmail = context.AspNetUsers.Where(x => x.Email == Input.Email).ToList();
+                var usedEmail =await context.AspNetUsers.Where(x => x.Email == Input.Email).ToListAsync();
                 if(usedEmail.Count==0)
                 {
                     if (ModelState.IsValid)

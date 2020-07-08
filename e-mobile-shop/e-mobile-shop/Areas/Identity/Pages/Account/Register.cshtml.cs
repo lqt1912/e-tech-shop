@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using e_mobile_shop.Models;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace e_mobile_shop.Areas.Identity.Pages.Account
 {
@@ -123,68 +123,77 @@ namespace e_mobile_shop.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             using(var context = new ClientDbContext())
             {
-                if (ModelState.IsValid)
+                var _usedEmail = await context.AspNetUsers.Where(x=>x.Email == Input.Email).ToListAsync();
+                var _usedUername = await context.AspNetUsers.Where(x=>x.UserName == Input.Username).ToListAsync();
+                if(_usedEmail.Count==0 && _usedUername.Count  ==0)
                 {
-                    var user = new AppUser
+                    if (ModelState.IsValid)
                     {
-                        HoTen = Input.HoTen,
-                        UserName = Input.Username,
-                        Email = Input.Email,
-                        NgaySinh = Input.NgaySinh,
-                        CMND = Input.CMND,
-                        Avatar = Input.Avatar,
-                        PhoneNumber = Input.SDT,
-                        GioiTinh = Input.GioiTinh,
-                        DiaChi = Input.DiaChi + ","
-                        +context.Ward.Find(Input.XaPhuong).Name + ","
-                        + context.District.Find(Input.QuanHuyen).Name
-                        + "," + context.Province.Find(Input.TinhThanh).Name
-                    };
-
-                    string content = System.IO.File.ReadAllText("RegisterEmail.html");
-                    content = content.Replace("{{Hoten}}", user.HoTen);
-                    content = content.Replace("{{username}}", user.UserName);
-                    content = content.Replace("{{phone}}", user.PhoneNumber);
-                    content = content.Replace("{{email}}", user.Email);
-                    content = content.Replace("{{address}}", user.DiaChi);
-                    var result = await _userManager.CreateAsync(user, Input.Password);
-                    if (result.Succeeded)
-                    {
-                        _logger.LogInformation("User created a new account with password.");
-                        AspNetUserRoles userrole = new AspNetUserRoles()
+                        var user = new AppUser
                         {
-                            RoleId = context.AspNetRoles.FirstOrDefault(x => x.Name == "Khách hàng")?.Id,
-                            UserId = user.Id
+                            HoTen = Input.HoTen,
+                            UserName = Input.Username,
+                            Email = Input.Email,
+                            NgaySinh = Input.NgaySinh,
+                            CMND = Input.CMND,
+                            Avatar = Input.Avatar,
+                            PhoneNumber = Input.SDT,
+                            GioiTinh = Input.GioiTinh,
+                            DiaChi = Input.DiaChi + ","
+                            + context.Ward.Find(Input.XaPhuong).Name + ","
+                            + context.District.Find(Input.QuanHuyen).Name
+                            + "," + context.Province.Find(Input.TinhThanh).Name
                         };
-                        context.AspNetUserRoles.Add(userrole);
-                        context.SaveChanges();
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page("/Account/ConfirmEmail", pageHandler: null,
-                            values: new { area = "Identity", userId = user.Id, code = code },
-                            protocol: Request.Scheme);
 
-                        content = content.Replace("{{callbackurl}}", $"Vui lòng xác nhận tài khoản bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấn vào đây </a>.");
-
-                        await _emailSender.SendEmailAsync(Input.Email, "Email thông tin tài khoản ", $"{System.Net.WebUtility.HtmlDecode(content)}");
-
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        string content = System.IO.File.ReadAllText("RegisterEmail.html");
+                        content = content.Replace("{{Hoten}}", user.HoTen);
+                        content = content.Replace("{{username}}", user.UserName);
+                        content = content.Replace("{{phone}}", user.PhoneNumber);
+                        content = content.Replace("{{email}}", user.Email);
+                        content = content.Replace("{{address}}", user.DiaChi);
+                        var result = await _userManager.CreateAsync(user, Input.Password);
+                        if (result.Succeeded)
                         {
-                            return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
-                        }
-                        else
-                        {
-                            await _signInManager.SignInAsync(user, isPersistent: false);
-                            return LocalRedirect(returnUrl);
-                        }
+                            _logger.LogInformation("User created a new account with password.");
+                            AspNetUserRoles userrole = new AspNetUserRoles()
+                            {
+                                RoleId = context.AspNetRoles.FirstOrDefault(x => x.Name == "Khách hàng")?.Id,
+                                UserId = user.Id
+                            };
+                            context.AspNetUserRoles.Add(userrole);
+                            context.SaveChanges();
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                            var callbackUrl = Url.Page("/Account/ConfirmEmail", pageHandler: null,
+                                values: new { area = "Identity", userId = user.Id, code = code },
+                                protocol: Request.Scheme);
 
-                    }
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                            content = content.Replace("{{callbackurl}}", $"Vui lòng xác nhận tài khoản bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấn vào đây </a>.");
+
+                            await _emailSender.SendEmailAsync(Input.Email, "Email thông tin tài khoản ", $"{System.Net.WebUtility.HtmlDecode(content)}");
+
+                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                            {
+                                return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
+                            }
+                            else
+                            {
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                                return LocalRedirect(returnUrl);
+                            }
+
+                        }
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
-
+               
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Username hoặc email đã dùng! ");
+                }
             }
 
             // If we got this far, something failed, redisplay form
